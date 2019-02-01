@@ -3,7 +3,7 @@
 # $1 - file
 # $2 - initial goal
 
-PE="/Users/jpg/Research/LP/clptools/predabs/pe"
+PE="."
 
 draw=0
 while getopts "d" flag
@@ -35,11 +35,11 @@ if [[ $k -eq 0 ]]; then
    k=1
 fi
 
-   $PE/props -prg "$1" -l $k -o "$resultdir/$f.props"
-   $PE/peunf_smt_2 -prg "$1" -entry "$2" -props "$resultdir/$f.props" -o "$resultdir/$f.pe.pl" 
+   # $PE/props -prg "$1" -l $k -o "$resultdir/$f.props"
+   # $PE/peunf_smt_2 -prg "$1" -entry "$2" -props "$resultdir/$f.props" -o "$resultdir/$f.pe.pl" 
    #$PE/peunf_smt -prg "$1" -entry "$2" -props "$resultdir/$f.props" -o "$resultdir/$f.pe.pl" 
 
-   #$PE/peunf -prg "$1" -entry "$2" -props "$resultdir/$f.props" -o "$resultdir/$f.pe.pl" 
+   $PE/peunf -prg "$1" -entry "$2" -props "$3" -o "$resultdir/$f.pe.pl"
 
 
    if [[ $draw -eq 1 ]]; then

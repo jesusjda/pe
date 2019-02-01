@@ -30,6 +30,9 @@
 :- dynamic(preserveInitPred/0).
 
 
+do_not_unfold(P/_) :-
+    atom_codes(P,Cs), append(_,[95, 97, 115, 115, 101, 114, 116, _],Cs).
+
 
 go(F,Q,Props) :-
 	peunf:main(['-prg',F, '-entry', Q, '-props',Props]).
@@ -149,6 +152,7 @@ detPred(P/N) :-
 unfoldablePreds([],_,[]).
 unfoldablePreds([P|Ps],BPs,[P|Us]) :-
 	\+ member(P,BPs),
+	\+ do_not_unfold(P),
 	detPred(P),
 	(preserveInitPred -> \+ isInitPred(P); true),
 	!,
