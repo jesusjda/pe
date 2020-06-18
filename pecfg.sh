@@ -9,8 +9,9 @@
 # -r PATH option to select destination folder (default. $1_output/)
 
 PEPATH=$(dirname $0)
+export LD_LIBRARY_PATH=$PATH":"$PEPATH
 
-OPTS=`getopt -o pdr:l: --long result-dir:,draw -n "$0" -- "$@"`
+OPTS=`getopt -o sdr:p: --long result-dir:props:,draw -n "$0" -- "$@"`
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2; exit 1; fi
 
 eval set -- "$OPTS"
@@ -22,11 +23,11 @@ while true; do
    case "$1" in
        -d) draw=true; shift
 	   ;;
-       -l) level=$2; shift 2;
+       -p | --props) props=$2; shift 2;
 	   ;;
        -r|--result-dir) resultdir=$2; shift 2;
 	   ;;
-       -p) print=true; shift;
+       -s) print=true; shift;
 	   ;;
        -- ) shift; break ;;
        * ) break ;;
@@ -36,6 +37,7 @@ done
 if [ $# -gt 2 ]; then echo "Too many arguments." >&2; exit 1; fi
 if [ $# -eq 1 ]; then echo "Missing entry point or file." >&2; exit 1; fi
 if [ ! -f "$1" ]; then echo 'File "'$1'" not found.' >&2; exit 1; fi
+if [ ! -f "$props" ]; then echo "Missing file of properties: '$props'." >&2; exit 1; fi
 if [[ -z ${resultdir+x} ]]; then resultdir=$(dirname $1); fi
 
 
@@ -52,10 +54,7 @@ fi
 cp $1 "$resultdir/$f.pl"
 if [ $? != 0 ]; then echo "Error: no source file or destination folder." >&2; exit 1; fi
 
-$PEPATH/props -prg "$1" -l "$level" -o "$resultdir/$f.props"
-if [ $? != 0 ]; then echo "Error: error computing the properties." >&2; exit 1; fi
-
-$PEPATH/peunf_smt_2 -prg "$1" -entry "$2" -props "$resultdir/$f.props" -o "$resultdir/$f.pe.pl"
+$PEPATH/peunf_smt_2 -prg "$1" -entry "$2" -props "$props" -o "$resultdir/$f.pe.pl"
 if [ $? != 0 ]; then echo "Error: error doing partial evaluation." >&2; exit 1; fi
 
 $PEPATH/chc2cfg -prg "$resultdir/$f.pe.pl" -cfg "$1" -init "$2" -o "$resultdir/$f.pe.fc"
