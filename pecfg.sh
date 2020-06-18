@@ -7,11 +7,12 @@
 # -p flag if present for print cfg in fc format
 # -l N option to select the level of props (default. 4)
 # -r PATH option to select destination folder (default. $1_output/)
+# -u no unfold option
 
 PEPATH=$(dirname $0)
-export LD_LIBRARY_PATH=$PATH":"$PEPATH
+export LD_LIBRARY_PATH=$PATH":"$PEPATH":"$LD_LIBRARY_PATH
 
-OPTS=`getopt -o sdr:p: --long result-dir:props:,draw -n "$0" -- "$@"`
+OPTS=`getopt -o sdr:u:p: --long no-unfold:result-dir:props:,draw -n "$0" -- "$@"`
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2; exit 1; fi
 
 eval set -- "$OPTS"
@@ -19,6 +20,7 @@ eval set -- "$OPTS"
 draw=false
 level=4
 print=false
+nounfold=none
 while true; do
    case "$1" in
        -d) draw=true; shift
@@ -27,6 +29,9 @@ while true; do
 	   ;;
        -r|--result-dir) resultdir=$2; shift 2;
 	   ;;
+       -u|--no-unfold) nounfold=$2; shift 2;
+	   ;;
+
        -s) print=true; shift;
 	   ;;
        -- ) shift; break ;;
@@ -54,7 +59,7 @@ fi
 cp $1 "$resultdir/$f.pl"
 if [ $? != 0 ]; then echo "Error: no source file or destination folder." >&2; exit 1; fi
 
-$PEPATH/peunf_smt_2 -prg "$1" -entry "$2" -props "$props" -o "$resultdir/$f.pe.pl"
+$PEPATH/peunf_smt_2 -prg "$1" -entry "$2" -props "$props" -o "$resultdir/$f.pe.pl" -nounfold "$nounfold"
 if [ $? != 0 ]; then echo "Error: error doing partial evaluation." >&2; exit 1; fi
 
 $PEPATH/chc2cfg -prg "$resultdir/$f.pe.pl" -cfg "$1" -init "$2" -o "$resultdir/$f.pe.fc"

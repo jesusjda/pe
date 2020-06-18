@@ -31,6 +31,7 @@
 :- dynamic(prop/2).
 :- dynamic(peClause/4).
 :- dynamic(negprops/0).
+:- dynamic(nounfold/1).
 
 
 
@@ -65,6 +66,7 @@ recognised_option('-o',    outputFile(R),[R]).
 recognised_option('-props',propFile(R),[R]).
 recognised_option('-neg',  negprops,[]).
 recognised_option('-entry',entry(Q),[Q]).
+recognised_option('-nounfold',nounfold(R),[R]).
 
 	
 setOptions(Options,File,Goal,OutS) :-
@@ -80,7 +82,10 @@ setOptions(Options,File,Goal,OutS) :-
 			OutS=user_output),
 	(member(negprops,Options) -> assert(negprops); true),
 	(member(propFile(PFile),Options), readPropFile(PFile); 
-			true).
+	                true),
+    	(member(nounfold(Mode),Options) -> assert(nounfold(Mode)); 
+			assert(nounfold(none))).
+
 			
 
 convertQueryString(Q,Q1) :-
@@ -597,4 +602,11 @@ list2conj([A|As],(A,As1)) :-
 	list2conj(As,As1).
 
 do_not_unfold(P/_) :-
+    nounfold(asserts),
     atom_codes(P,Cs), append(_,[95, 97, 115, 115, 101, 114, 116, _],Cs).
+
+do_not_unfold(_):- nounfold(all).
+
+do_not_unfold(_):- nounfold(none),!,false.
+    
+    
