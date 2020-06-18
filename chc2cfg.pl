@@ -157,17 +157,18 @@ getStateVars(File,Vs,Vs1):-
 	unifyNames(Ws).
 	
 getTransitionClause(S,C,Ws) :-
-	read_term(S,C1,[variable_names(Ws1)]),	
-	initNode(Init),
-	ignoreStartClauses(C1,Init,S,C,Ws1,Ws).
+	read_term(S,C,[variable_names(Ws)]).
+%	read_term(S,C1,[variable_names(Ws1)]),
+%	initNode(Init),
+%	ignoreStartClauses(C1,Init,S,C,Ws1,Ws).
 
-ignoreStartClauses(C1,Init,S,C,_,Ws):-
-	C1 = (H :- _),
-	functor(H,Init,_),
-	!,
-	read_term(S,C2,[variable_names(Ws2)]),
-	ignoreStartClauses(C2,Init,S,C,Ws2,Ws).
-ignoreStartClauses(C,_,_,C,Ws,Ws).
+%ignoreStartClauses(C1,Init,S,C,_,Ws):-
+%	C1 = (H :- _),
+%	functor(H,Init,_),
+%	!,
+%	read_term(S,C2,[variable_names(Ws2)]),
+%	ignoreStartClauses(C2,Init,S,C,Ws2,Ws).
+%ignoreStartClauses(C,_,_,C,Ws,Ws).
 
 
 	
