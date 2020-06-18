@@ -4,6 +4,7 @@
 
 :- module(chc2cfg,_,[dynamic]).
 
+:- use_module(library(streams)).
 :- use_module(chclibs(common)).
 :- use_module(library(terms_vars)).
 :- use_module(chclibs(program_loader)).
