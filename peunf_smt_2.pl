@@ -152,6 +152,7 @@ detPred(P/N) :-
 unfoldablePreds([],_,[]).
 unfoldablePreds([P|Ps],BPs,[P|Us]) :-
 	\+ member(P,BPs),
+	\+ do_not_unfold(P),
 	detPred(P),
 	!,
 	unfoldablePreds(Ps,BPs,Us).
@@ -595,3 +596,5 @@ list2conj([],true) :-
 list2conj([A|As],(A,As1)) :-
 	list2conj(As,As1).
 
+do_not_unfold(P/_) :-
+    atom_codes(P,Cs), append(_,[95, 97, 115, 115, 101, 114, 116, _],Cs).
