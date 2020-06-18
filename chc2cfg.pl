@@ -2,7 +2,7 @@
 % Optionally use the original file before PE for variable names 
 % Option -init S.  S is the initial node of the CFG
 
-:- module(chc2cfg,_,[]).
+:- module(chc2cfg,_,[dynamic]).
 
 :- use_module(chclibs(common)).
 :- use_module(library(terms_vars)).
@@ -11,7 +11,7 @@
 :- include(chclibs(messages)).
 :- use_module(library(write)).
 :- use_module(library(read)).
-:- use_module(library(dynamic)).
+%:- use_module(library(dynamic)).
 :- use_module(library(lists)).
 :- use_module(library(read_from_string), [read_from_atom/2]).
 
